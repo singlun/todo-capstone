@@ -12,20 +12,15 @@ export async function getUserTodos(jwtToken: any): Promise<TodoItem[]> {
   return await todoAccess.getUserTodos(userId)
 }
 
-export async function deleteUserTodos(todoId) {
-
-  await todoAccess.deleteUserTodo(todoId)
+export async function deleteUserTodos(todoId: string, jwtToken: any) {
+  //Extract the UserId From the jwt Token
+  const userId = parseUserId(jwtToken)
+  await todoAccess.deleteUserTodo(todoId, userId)
 }
 
-// export async function attachTodoUrl(uploadUrl, todoId) {  
-//   await todoAccess.attachTodoUrl(uploadUrl, todoId)
-// }
 
 export async function processImage(Key: string) {  
-  await todoAccess.processTodoImage(Key)
-  
-  return await todoAccess.attachTodoUrl(Key) 
-
+  await todoAccess.processTodoImage(Key)  
 }
 
 export async function createTodo(
@@ -36,11 +31,9 @@ export async function createTodo(
 
 
 export async function updateUserTodo(
-  todo: TodoUpdate,    
-  todoId: string,
-): Promise<TodoItem>{
-
-  return await todoAccess.updateUserTodo(todo,todoId)
+  todo: TodoItem
+): Promise<string> {
+  return await todoAccess.updateUserTodo(todo)
 }
 
 export function getUploadUrl(todoId: string): string {

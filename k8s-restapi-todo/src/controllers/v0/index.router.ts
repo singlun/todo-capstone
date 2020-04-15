@@ -3,7 +3,7 @@ import { TodoRouter } from './todo/routes/todo.router';
 
 const router: Router = Router();
 
-router.use('/todo', TodoRouter);
+router.use('/todos', TodoRouter);
 
 router.get('/', async (req: Request, res: Response) => {    
     res.send(`V0`);

@@ -42,8 +42,12 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
 // Get all todo items
 router.get('/', requireAuth, async (req: Request, res: Response) => {    
     const userTodoItems: TodoItem[] = await getUserTodos(token)
+
     logger.info('getUserTodos', userTodoItems) 
-    res.send(userTodoItems);
+
+    const items = JSON.parse(JSON.stringify(userTodoItems))
+
+    res.send({items});
 });   
 
 // Add a todo Items.
@@ -57,44 +61,73 @@ router.post('/',
   //Extract userid from JWT token
   const userId = parseUserId(token)
 
-  const name = req.body.name;
-  const dueDate = req.body.dueDate;  
+  const name = req.body.name
+  const dueDate = req.body.dueDate
 
-  //Add New Todo Item and Return the Result
-  const newTodoItems: TodoItem = await createTodo({
-                                            userId,
-                                            todoId,
-                                            createdAt: new Date().toISOString(),
-                                            name: name,
-                                            dueDate: dueDate,
-                                            done: false,
-                                            attachmentUrl: `https://${config.thumbnails_s3_bucket}.s3.amazonaws.com/${todoId}.jpeg`,
-                                      })
+  logger.info('CreateTodo', {body: req.body})
 
-  logger.info('New Item', newTodoItems) 
+  try {
+        //Add New Todo Item and Return the Result
+        const newTodoItems: TodoItem = await createTodo({
+                                                  userId,
+                                                  todoId,
+                                                  createdAt: new Date().toISOString(),
+                                                  name: name,
+                                                  dueDate: dueDate,
+                                                  done: false,
+                                                  attachmentUrl: `https://${config.thumbnails_s3_bucket}.s3.amazonaws.com/${todoId}.jpeg`,
+                                            })
+
+        logger.info('New Item', newTodoItems) 
+
+        const item = JSON.parse(JSON.stringify(newTodoItems))
+
+        res.status(201).send({item});
+  }                                        
+  catch(error){
+      throw new Error(error.message);
+  }
 
 
-    res.status(201).send(newTodoItems);
+
 });
 
 
-// update a specific resource
+// update a specific TodoItem
 router.patch('/:todoId', 
     requireAuth, 
     async (req: Request, res: Response) => {
-        let { todoId } = req.params;
-        const todoUpdate: TodoUpdate = req.body;
 
-        //Extract userid from JWT token
-        const userId = parseUserId(token)        
+        try {
 
-        //Update Todo Item and Return the Result
-        const updateTodoItems: TodoUpdate = await updateUserTodo(todoUpdate, todoId)
+            let { todoId } = req.params;
+            const todoUpdate: TodoUpdate = req.body
 
-        logger.info('Update Item', updateTodoItems) 
+            logger.info('TodoUpdate Item', {todoUpdate})
+
+            //Extract the UserId From the jwt Token
+            const userId = parseUserId(token)
+
+                let updateItem: any = await updateUserTodo({
+                                    userId,
+                                    todoId,
+                                    createdAt: new Date().toISOString(),
+                                    name: todoUpdate.name,
+                                    dueDate: todoUpdate.dueDate,
+                                    done: todoUpdate.done,
+                                    attachmentUrl: `https://${config.thumbnails_s3_bucket}.s3.amazonaws.com/${todoId}.jpeg`,
+                                });
 
 
-        res.status(201).send(updateTodoItems);
+            logger.info('User Todo items', {updateItem: JSON.parse(updateItem)});
+            
+            const item = JSON.parse(JSON.stringify(updateItem))
+
+            res.status(201).send({item});
+        }
+        catch(error) {
+            throw new Error(error.message);
+        }                 
 
 });
 
@@ -106,46 +139,35 @@ router.delete('/:todoId',
         
         logger.info('User Todoid', {toId: todoId})
 
-        //Delete User's Todo Item
-        await deleteUserTodos(todoId)
+        try {
+                //Delete User's Todo Item
+                await deleteUserTodos(todoId, token)
 
-        res.status(201).send({});
-
+               res.status(201).send({});       
+        } catch (error) {
+               throw new Error(error.message)
+        }
 });
-
-
-// Gernerate Todo Upload Url.
-router.post('/:todId', 
-    requireAuth, 
-    async (req: Request, res: Response) => {
-
-  let { todoId } = req.params;       
-
-  // Return a presigned URL to upload a file for a TODO item with the provided id
-  const url: string = getUploadUrl(todoId)
-
-  logger.info('getUploadUrl', {url})
-
-
-    res.status(201).send(url);
-});
-
 
 // Process Images.
 
-router.post('/:imageId', 
+router.post('/:todoId/attachment', 
     requireAuth, 
     async (req: Request, res: Response) => {
 
-  let { imageId } = req.params;       
+        let { todoId } = req.params;       
 
-  // Return a presigned URL to upload a file for a TODO item with the provided id
-  const url = await processImage(imageId)
+        try {
+              // Return a presigned URL to upload a file for a TODO item with the provided id
+              const uploadUrl = await processImage(todoId)
 
-  logger.info('Thumbnamil Url', {url})
+              logger.info('Thumbnamil Url', {uploadUrl})
+  
+              res.status(201).send({uploadUrl});        
+        } catch (error) {
+              throw new Error(error.message);
+        }
 
-
-  res.status(201).send(url);
 });
 
 
