@@ -2,7 +2,7 @@ const express = require('express')
 import bodyParser from 'body-parser';
 import { IndexRouter } from './controllers/v0/index.router';
 const app = express()
-const port = 8080
+const port = 8200
 
 app.use(bodyParser.json());
 

@@ -1,32 +1,30 @@
 export const config = {
-    "dev": {
-      "todos_table": process.env.TODOS_TABLE,
-      "users_todo_table": process.env.USERS_TODO_TABLE,
-      "userid_index": process.env.USERID_INDEX,
-      "todos_s3_bucket": process.env.TODOS_S3_BUCKET,
-      "thumbnails_s3_bucket": process.env.THUMBNAILS_S3_BUCKET,
-      "signed_url_expiration": process.env.SIGNED_URL_EXPIRATION,
-      "bucket_region": process.env.BUCKET_REGION,
-      "aws_reigion": process.env.AWS_REGION,
-      "aws_profile": process.env.AWS_PROFILE,
-      "url": process.env.URL    
-    },
-    "prod": {
-      "todos_table": "",
-      "users_todo_table": "",
-      "userid_index": "",
-      "todos_s3_bucket": "",
-      "thumbnails_s3_bucket": "",
-      "signed_url_expiration": "",
-      "bucket_region": "",
-      "aws_reigion": process.env.AWS_REGION,
-      "aws_profile": process.env.AWS_PROFILE,
-      "url": process.env.URL  
-    },
-    "jwt": {
-      "secret": process.env.JWT_SECRET
-    }  
-  }
+  "dev": {
+    "users_todo_table": process.env.USERS_TODO_TABLE,
+    "userid_index": process.env.USERID_INDEX,
+    "todos_s3_bucket": process.env.TODOS_S3_BUCKET,
+    "thumbnails_s3_bucket": process.env.THUMBNAILS_S3_BUCKET,
+    "signed_url_expiration": process.env.SIGNED_URL_EXPIRATION,
+    "aws_reigion": process.env.AWS_REGION,
+    "aws_profile": process.env.AWS_PROFILE,
+    "url": process.env.URL    
+  },
+  "prod": {
+    "todos_table": "",
+    "users_todo_table": "",
+    "userid_index": "",
+    "todos_s3_bucket": "",
+    "thumbnails_s3_bucket": "",
+    "signed_url_expiration": "",
+    "bucket_region": "",
+    "aws_reigion": process.env.AWS_REGION,
+    "aws_profile": process.env.AWS_PROFILE,
+    "url": process.env.URL  
+  },
+  "jwt": {
+    "secret": process.env.JWT_SECRET
+  }  
+}
 
 export  const cert = `-----BEGIN CERTIFICATE-----
 MIIDBzCCAe+gAwIBAgIJGlE3uYNmrfqmMA0GCSqGSIb3DQEBCwUAMCExHzAdBgNV
@@ -47,4 +45,3 @@ viVLwuFM64P7W11nM0G/ezWoztTo+nLTTekP9LseBuhIaHqP5XeTuwJpIs39+gif
 hjWw8pKIbywJ7DFiOL4Pg9NlRW6p44EqLLDyZOQULVwxqsRBosRXnSbfmiUykyPj
 pUu6Jvrs+FnZLlA=
 -----END CERTIFICATE-----`
-  

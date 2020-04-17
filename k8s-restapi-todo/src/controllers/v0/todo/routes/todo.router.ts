@@ -7,8 +7,8 @@ import * as c from '../../../../config/config';
 import { getUserTodos } from '../../../../businessLogic/todo';
 import { createLogger } from '../../../../utils/logger'
 import { parseUserId } from '../../../../auth/utils'
-import { v4 as uuidv4 } from 'uuid';
-import { createTodo, updateUserTodo, deleteUserTodos, getUploadUrl, processImage } from '../../../../businessLogic/todo'
+const { v4: uuidv4 } = require('uuid');
+import { createTodo, updateUserTodo, deleteUserTodos, processImage, getUploadUrl } from '../../../../businessLogic/todo'
 
 
 const router: Router = Router();
@@ -40,14 +40,26 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
     }
 
 // Get all todo items
-router.get('/', requireAuth, async (req: Request, res: Response) => {    
-    const userTodoItems: TodoItem[] = await getUserTodos(token)
+router.get('/', requireAuth, async (req: Request, res: Response) => { 
 
-    logger.info('getUserTodos', userTodoItems) 
+    let items: any = {}
+    
+    try {
+        items = await getUserTodos(token)
 
-    const items = JSON.parse(JSON.stringify(userTodoItems))
+        logger.info('getUserTodos', items) 
 
-    res.send({items});
+        items =  {
+            items: [
+            ...Object.assign([],Object.keys(items.Items).map(todoItem => items.Items[todoItem]))
+            ]
+        }        
+    } catch (error) {
+        throw new Error(error.message)  
+    }
+  
+
+    res.status(200).send(items);
 });   
 
 // Add a todo Items.
@@ -66,23 +78,30 @@ router.post('/',
 
   logger.info('CreateTodo', {body: req.body})
 
+
   try {
         //Add New Todo Item and Return the Result
-        const newTodoItems: TodoItem = await createTodo({
-                                                  userId,
-                                                  todoId,
-                                                  createdAt: new Date().toISOString(),
-                                                  name: name,
-                                                  dueDate: dueDate,
-                                                  done: false,
-                                                  attachmentUrl: `https://${config.thumbnails_s3_bucket}.s3.amazonaws.com/${todoId}.jpeg`,
-                                            })
+        let newitem: TodoItem = await createTodo({
+                                userId,
+                                todoId,
+                                createdAt: new Date().toISOString(),
+                                name: name,
+                                dueDate: dueDate,
+                                done: false,
+                                attachmentUrl: `https://${config.thumbnails_s3_bucket}.s3.amazonaws.com/${todoId}.jpeg`,
+                        })
 
-        logger.info('New Item', newTodoItems) 
+                        var arryObj = [{"name": "alan", "age": 10}]     
 
-        const item = JSON.parse(JSON.stringify(newTodoItems))
-
-        res.status(201).send({item});
+        const item =  {
+                         item: {
+                             ...newitem
+                         }
+                      } 
+                      
+        logger.info('New Item', item)                      
+          
+        res.status(201).send(item);
   }                                        
   catch(error){
       throw new Error(error.message);
@@ -97,10 +116,10 @@ router.post('/',
 router.patch('/:todoId', 
     requireAuth, 
     async (req: Request, res: Response) => {
-
+        let item: any = {}
         try {
 
-            let { todoId } = req.params;
+            let { todoId } = req.params;            
             const todoUpdate: TodoUpdate = req.body
 
             logger.info('TodoUpdate Item', {todoUpdate})
@@ -108,7 +127,7 @@ router.patch('/:todoId',
             //Extract the UserId From the jwt Token
             const userId = parseUserId(token)
 
-                let updateItem: any = await updateUserTodo({
+                item = await updateUserTodo({
                                     userId,
                                     todoId,
                                     createdAt: new Date().toISOString(),
@@ -119,16 +138,15 @@ router.patch('/:todoId',
                                 });
 
 
-            logger.info('User Todo items', {updateItem: JSON.parse(updateItem)});
+            logger.info('User Todo items', {updateItem: JSON.parse(item)});
             
-            const item = JSON.parse(JSON.stringify(updateItem))
-
-            res.status(201).send({item});
+            item = JSON.parse(JSON.stringify(item)) 
+            
+            res.status(201).send();
         }
         catch(error) {
             throw new Error(error.message);
-        }                 
-
+        } 
 });
 
 // delete a specific resource
@@ -137,38 +155,61 @@ router.delete('/:todoId',
     async (req: Request, res: Response) => {
         let { todoId } = req.params;
         
-        logger.info('User Todoid', {toId: todoId})
+        logger.info('Delete Todoid', {toId: todoId})
 
         try {
                 //Delete User's Todo Item
                 await deleteUserTodos(todoId, token)
 
-               res.status(201).send({});       
+               res.status(200).send();       
         } catch (error) {
                throw new Error(error.message)
         }
 });
 
-// Process Images.
+// Get Bucket Signed Url For Image Upload.
 
 router.post('/:todoId/attachment', 
     requireAuth, 
-    async (req: Request, res: Response) => {
+    async (req: Request, res: Response, next: NextFunction) => {
 
-        let { todoId } = req.params;       
+        let { todoId } = req.params; 
+        
+        logger.info("GET SignedURL KEY", {todoId});
 
         try {
               // Return a presigned URL to upload a file for a TODO item with the provided id
-              const uploadUrl = await processImage(todoId)
-
+              const uploadUrl: string = await getUploadUrl(todoId)
+                           
               logger.info('Thumbnamil Url', {uploadUrl})
-  
-              res.status(201).send({uploadUrl});        
+
+              res.status(200).send({uploadUrl});
+ 
         } catch (error) {
               throw new Error(error.message);
         }
 
 });
 
+
+// Process Images.
+router.post('/:todoId/processimage', 
+    requireAuth, 
+    async (req: Request, res: Response, next: NextFunction) => {
+
+        let { todoId } = req.params; 
+        
+        logger.info("Process Imgage Key", {todoId});
+
+        try {
+              // Return a presigned URL to upload a file for a TODO item with the provided id
+              await processImage(todoId)
+
+              res.status(200).send();
+ 
+        } catch (error) {
+              throw new Error(error.message);
+        }
+});
 
 export const TodoRouter: Router = router;

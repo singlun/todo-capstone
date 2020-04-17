@@ -3,7 +3,7 @@
 
 //export const apiEndpoint = `https://${apiId}.execute-api.us-east-2.amazonaws.com/dev`
 
-export const apiEndpoint = `http://localhost:8080/api/v0`
+export const apiEndpoint = `http://localhost:8200/api/v0`
 
 
 export const authConfig = {
