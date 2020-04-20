@@ -72,3 +72,16 @@ export async function getUploadUrl(
 export async function uploadFile(uploadUrl: string, file: Buffer): Promise<void> {
   await Axios.put(uploadUrl, file)
 }
+
+//Alan Added - For Image Resizing
+export async function processFile(
+  idToken: string,
+  todoId: string
+): Promise<void> {
+  await Axios.post(`${apiEndpoint}/todos/${todoId}/processimage`, '', {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${idToken}`
+    }
+  })
+}

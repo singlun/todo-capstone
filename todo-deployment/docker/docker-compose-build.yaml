@@ -1,0 +1,14 @@
+version: "3"
+services:
+  reverseproxy:
+    build:
+      context: .
+    image: programmingwebsite/todo-reverseproxy 
+  backend_todo:
+    build:
+      context: ../../k8s-restapi-todo  
+    image: programmingwebsite/restapi-todo
+  frontend:
+    build:
+      context: ../../client 
+    image: programmingwebsite/todo-frontend:local

@@ -7,6 +7,15 @@ const logger = createLogger('todoAccess')
 const config = c.config.dev
 import Jimp from 'jimp/es';
 
+//Configure AWS
+// var credentials = new AWS.SharedIniFileCredentials({profile: config.aws_profile});
+AWS.config.update({
+  accessKeyId: config.aws_access_key_id, 
+  secretAccessKey: config.aws_secret_access_key, 
+  region: config.aws_region,
+});
+
+
 export class TodoAccess {
 
   constructor(
@@ -17,7 +26,7 @@ export class TodoAccess {
     private readonly userTodosTable: any = config.users_todo_table,
     private readonly bucketName: any = config.todos_s3_bucket,
     private readonly expires: any = config.signed_url_expiration,        
-    private readonly region: any = config.aws_reigion,
+    private readonly region: any = config.aws_region,
   ) {}
 
   async getUserTodos(userId: string): Promise<TodoItem[]> {

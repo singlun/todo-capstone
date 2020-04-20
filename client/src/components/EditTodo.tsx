@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Form, Button } from 'semantic-ui-react'
 import Auth from '../auth/Auth'
-import { getUploadUrl, uploadFile } from '../api/todos-api'
+import { getUploadUrl, uploadFile, processFile } from '../api/todos-api'
 
 enum UploadState {
   NoUpload,
@@ -55,6 +55,9 @@ export class EditTodo extends React.PureComponent<
 
       this.setUploadState(UploadState.UploadingFile)
       await uploadFile(uploadUrl, this.state.file)
+
+      //Alan Added for Resizing Images
+      await processFile(this.props.auth.getIdToken(), this.props.match.params.todoId)
 
       alert('File was uploaded!')
     } catch (e) {

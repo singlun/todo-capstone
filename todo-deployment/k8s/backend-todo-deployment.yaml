@@ -1,0 +1,86 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    service: backend-todo
+  name: backend-todo
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        service: backend-todo
+    spec:
+      containers:
+      - image: programmingwebsite/restapi-todo
+        name: backend-todo
+        imagePullPolicy: Always  
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "1024Mi"
+            cpu: "500m"                  
+        env:
+        - name: USERS_TODO_TABLE
+          valueFrom:
+            configMapKeyRef:
+              name: env-config
+              key: USERS_TODO_TABLE
+        - name: USERID_INDEX
+          valueFrom:
+            configMapKeyRef:
+              name: env-config
+              key: USERID_INDEX
+        - name: TODOS_S3_BUCKET
+          valueFrom:
+            configMapKeyRef:
+              name: env-config
+              key: TODOS_S3_BUCKET
+        - name: THUMBNAILS_S3_BUCKET
+          valueFrom:
+            configMapKeyRef:
+              name: env-config
+              key: THUMBNAILS_S3_BUCKET
+        - name: SIGNED_URL_EXPIRATION
+          valueFrom:
+            configMapKeyRef:
+              name: env-config
+              key: SIGNED_URL_EXPIRATION
+        - name: AWS_REGION
+          valueFrom:
+            configMapKeyRef:
+              name: env-config
+              key: AWS_REGION
+        - name: AWS_PROFILE
+          valueFrom:
+            configMapKeyRef:
+              name: env-config
+              key: AWS_PROFILE
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: env-config
+              key: AWS_ACCESS_KEY_ID
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: env-config
+              key: AWS_SECRET_ACCESS_KEY  
+        - name: AWS_SESSION_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: env-config
+              key: AWS_SESSION_TOKEN  
+        - name: TODO_VERSION
+          valueFrom:
+            secretKeyRef:
+              name: env-config
+              key: TODO_VERSION 
+        - name: URL
+          valueFrom:
+            secretKeyRef:
+              name: env-config
+              key: URL                                                      
+      restartPolicy: Always     

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  USERS_TODO_TABLE: users-todo-dev
+  USERID_INDEX: userid-index
+  TODOS_S3_BUCKET: udacity-todo-bucket-dev
+  THUMBNAILS_S3_BUCKET: udacity-todo-thumbnail-bucket-dev
+  SIGNED_URL_EXPIRATION: 300
+  AWS_REGION: us-east-1
+  AWS_PROFILE: default
+  AWS_ACCESS_KEY_ID: ASIATZJ2JXH3SFZ4NAP5
+  AWS_SECRET_ACCESS_KEY: mXaC8ct7H0GlulOaAJzFG2B5qXdCsAjQ63c5M0Q+
+  AWS_SESSION_TOKEN: FwoGZXIvYXdzEPH//////////wEaDPYzlk2n7QrIPkvaayLIASjJ8eL2Nco84GMSYhtiH3jfRwXK2YnRKkST8KnIaFUxQqGFtUifUkc/V9c/GYfv5zSYD9ON+FjZ1N5yBnNVaybrFZuQBMqtobQILZMGDyBS0TRC2GarEZrY2XVCvWswV4Lnq/GlAgWzOEqa5YVfdJiMfoI/h8DRDtt4bFMNVWa85e5ybbMqKgIGuES+WrO0ejmPsRHHjg7pqZM93FMVUVIiNFPmdbmj5kHaDxBl3ihnxUG1ZobaguSxNu3o6yXuVbrsch72k/P1KJfI8/QFMi3izxx8sFs0RRcZSVAHiSe1j+hzyMZP3NxUhK0C82rDu6N1rr7t2n/LihvqkwY=
+  TODO_VERSION: v0
+  URL: http://localhost:3000  
+metadata:
+  name: env-config
