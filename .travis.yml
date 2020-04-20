@@ -18,4 +18,11 @@ before_install:
 
 
 install:
+    - export AWS_ACCESS_KEY_ID='AKIA3EMTN7DW6DELG6EG'
+    - export AWS_SECRET_ACCESS_KEY='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'
+    - export KUBECONFIG='k8s-restapi-todo/todo-deployment/todo-app-kubeconfig'
     - docker-compose -f k8s-restapi-todo/todo-deployment/docker/docker-compose-build.yaml build --parallel 
+    - docker login -u "programmingwebsite" -p "c9f12b41-e014-42cb-84b2-f71b41353962" docker.io
+    - docker-compose -f docker-compose-build.yaml push
+
+

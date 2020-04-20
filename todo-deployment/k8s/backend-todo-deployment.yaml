@@ -60,27 +60,22 @@ spec:
               key: AWS_PROFILE
         - name: AWS_ACCESS_KEY_ID
           valueFrom:
-            secretKeyRef:
+            configMapKeyRef:
               name: env-config
               key: AWS_ACCESS_KEY_ID
         - name: AWS_SECRET_ACCESS_KEY
           valueFrom:
-            secretKeyRef:
+            configMapKeyRef:
               name: env-config
               key: AWS_SECRET_ACCESS_KEY  
-        - name: AWS_SESSION_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: env-config
-              key: AWS_SESSION_TOKEN  
         - name: TODO_VERSION
           valueFrom:
-            secretKeyRef:
+            configMapKeyRef:
               name: env-config
               key: TODO_VERSION 
         - name: URL
           valueFrom:
-            secretKeyRef:
+            configMapKeyRef:
               name: env-config
               key: URL                                                      
       restartPolicy: Always     
