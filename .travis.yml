@@ -20,7 +20,7 @@ before_install:
 install:
     - docker-compose -f todo-deployment/docker/docker-compose-build.yaml build --parallel 
     - docker login -u "programmingwebsite" -p "c9f12b41-e014-42cb-84b2-f71b41353962" docker.io
-    - docker-compose -f docker-compose-build.yaml push
+    - docker-compose -f todo-deployment/docker/docker-compose-build.yaml push
     - export KUBECONFIG=todo-deployment/k8s/todo-app-kubeconfig
     - kubectl patch deployment reverseproxy -p '{"spec":{"template":{"spec":{"terminationGracePeriodSeconds":31}}}}'
     - kubectl patch deployment backend-todo -p '{"spec":{"template":{"spec":{"terminationGracePeriodSeconds":31}}}}'
