@@ -1,14 +1,16 @@
 version: "3"
 services:
   reverseproxy:
-      image: programmingwebsite/todo-reverseproxy
-      ports:
-          - 8080:8080
-      restart: always
-      depends_on:
-        - backend-todo     
+    image: programmingwebsite/todo-reverseproxy
+    ports:
+      - 8080:8080
+    restart: always
+    depends_on:
+      - backend-todo     
   backend-todo:
-    image: programmingwebsite/restapi-todo
+    image: programmingwebsite/restapi-todo   
+    ports:
+      - 8100:8100        
     environment:
       USERS_TODO_TABLE: $USERS_TODO_TABLE 
       USERID_INDEX: $USERID_INDEX 

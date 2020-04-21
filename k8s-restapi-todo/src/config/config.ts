@@ -7,8 +7,6 @@ export const config = {
     "signed_url_expiration": process.env.SIGNED_URL_EXPIRATION,
     "aws_region": process.env.AWS_REGION,
     "aws_profile": process.env.AWS_PROFILE,
-    "aws_access_key_id": process.env.AWS_ACCESS_KEY_ID,
-    "aws_secret_access_key": process.env.AWS_SECRET_ACCESS_KEY,   
     "todo_version": process.env.TODO_VERSION, 
     "url": process.env.URL    
   },

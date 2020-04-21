@@ -8,11 +8,10 @@ const config = c.config.dev
 import Jimp from 'jimp/es';
 
 //Configure AWS
-// var credentials = new AWS.SharedIniFileCredentials({profile: config.aws_profile});
+var credentials = new AWS.SharedIniFileCredentials({profile: config.aws_profile});
+AWS.config.credentials = credentials;
 AWS.config.update({
-  accessKeyId: config.aws_access_key_id, 
-  secretAccessKey: config.aws_secret_access_key, 
-  region: config.aws_region,
+  region: config.aws_region
 });
 
 
