@@ -13,9 +13,7 @@ spec:
     spec:
       containers:
       - image: programmingwebsite/restapi-todo
-        name: backend-todo
-        ports:
-          - containerPort: 8100          
+        name: backend-todo          
         imagePullPolicy: Always  
         resources:
           requests:

@@ -11,7 +11,7 @@ import {IndexRouter} from './controllers/v0/index.router';
 const version = c.config.dev.todo_version
 
 const app = express()
-const port = 8100
+const port = 8080
 
 app.use(bodyParser.json());
 
