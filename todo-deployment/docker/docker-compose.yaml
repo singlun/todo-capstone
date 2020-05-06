@@ -23,6 +23,6 @@ services:
    TODO_VERSION: ${TODO_VERSION} 
    URL: $URL    
  frontend:
-   image: programmingwebsite/todo-frontend:local  
+   image: programmingwebsite/todo-frontend:v0  
    ports:
     - 3000:3000

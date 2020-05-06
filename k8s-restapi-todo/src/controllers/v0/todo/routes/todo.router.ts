@@ -197,7 +197,7 @@ router.post('/:todoId/processimage',
     requireAuth, 
     async (req: Request, res: Response, next: NextFunction) => {
 
-        let { todoId } = req.params; 
+        var { todoId } = req.params; 
         
         logger.info("Process Imgage Key", {todoId});
 

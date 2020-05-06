@@ -5,7 +5,8 @@ import { createLogger } from '../utils/logger'
 import * as c from '../config/config';
 const logger = createLogger('todoAccess')
 const config = c.config.dev
-import Jimp from 'jimp/es';
+import Jimp from 'jimp';
+import { rejects } from 'assert';
 
 //Configure AWS
 var credentials = new AWS.SharedIniFileCredentials({profile: config.aws_profile});
@@ -211,39 +212,41 @@ export class TodoAccess {
                   });
                 });
   
-    const body: any = await promise
+    const body: any  = await promise 
 
-    console.log("Second Parms")
-
-    Jimp.read(body)
+    Jimp.read(body.Body)
     .then(image => {
       // Do stuff with the image.
       return image.resize(150, Jimp.AUTO)
-    }).then(resizeImg => {
-          resizeImg.getBuffer(Jimp.MIME_JPEG, (convertedBuffer)=>{
-                  const promise2 =  new Promise( function(resolve, reject) {
-                    s3.putObject({
-                                  Bucket: config.thumbnails_s3_bucket,
-                                  Key: `${todoId}.jpeg`,
-                                  Body: convertedBuffer
-                                 }, function (err: any, data: any) {
-                                          if (err) {
-                                            console.log(err);
-                                            reject(JSON.stringify({error: err.message}));
-                                          }
-                                          else { 
-                                              console.log("Successfully Put Image to s3 Thumbnail Bucket", data);
-                                          }
-                                });
-                  });          
-          })            
+    })
+    .then(resizeImg => {
+          resizeImg.getBuffer(Jimp.MIME_JPEG, async(error, img) => { 
+                  if (error) 
+                      logger.info("Error", {Error: error});
+                  else {
+                      await new Promise( function(resolve, reject) {
+                        s3.putObject({
+                                      Bucket: config.thumbnails_s3_bucket,
+                                      Key: `${todoId}.jpeg`,
+                                      Body: img
+                                    }, (err: any, data: any) => {
+                                              if (err) {
+                                                console.log(err);
+                                                reject(JSON.stringify({error: err.message}));
+                                              }
+                                              else { 
+                                                  console.log("Successfully Put Image to s3 Thumbnail Bucket", data);
+                                                  resolve();
+                                              }
+                                    });
+                                    
+                      }); 
+                }         
+          })           
     })
     .catch(err => {
         throw new Error(err.message);
     });
-
-  
   }
   }
-
 
