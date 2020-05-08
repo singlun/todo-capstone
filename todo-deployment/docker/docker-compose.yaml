@@ -20,9 +20,9 @@ services:
    SIGNED_URL_EXPIRATION: $SIGNED_URL_EXPIRATION 
    AWS_REGION: $AWS_REGION
    AWS_PROFILE: $AWS_PROFILE
-   TODO_VERSION: ${TODO_VERSION} 
+   TODO_VERSION: "v0" 
    URL: $URL    
  frontend:
-   image: programmingwebsite/todo-frontend:v0  
+   image: programmingwebsite/todo-frontend:v0
    ports:
     - 3000:3000

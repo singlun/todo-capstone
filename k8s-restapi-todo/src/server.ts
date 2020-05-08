@@ -1,33 +1,54 @@
 const express = require('express')
 import bodyParser from 'body-parser';
-
 //Alan added - For support Versionning Control
 import * as c from './config/config';
+import {IndexRouter0} from './controllers/v0/index.router';
+import {IndexRouter1} from './controllers/v1/index.router';
 
-//Alan
-//Must change Manually. If version 1 change it to
-//import {IndexRouter} from './controllers/v1/index.router'
-import {IndexRouter} from './controllers/v0/index.router';
-const version = c.config.dev.todo_version
 
-const app = express()
-const port = 8080
+export class Server {
 
-app.use(bodyParser.json());
+  constructor(
+    private readonly version: string = c.config.dev.todo_version == undefined ? "v0" : c.config.dev.todo_version,        
+  ) {}
 
-//CORS Should be restricted
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin","*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-    res.header("Access-Control-Allow-Methods", "GET,OPTIONS,POST,DELETE,PATCH");
-    next();
-  });
+  startServer() {  
+      const app = express();
+      const port = 8080;
 
-//app.use('/api/v0/', IndexRouter)
+      app.use(bodyParser.json());
 
-//Alan added - For support Versionning Control
-app.use(`/api/${version}/`, IndexRouter)
+      //CORS Should be restricted
+      app.use(function(req: any, res: any, next: any) {
+          res.header("Access-Control-Allow-Origin","*");
+          res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+          res.header("Access-Control-Allow-Methods", "GET,OPTIONS,POST,DELETE,PATCH");
+          next();
+        });
 
-//app.get('/', (req, res) => res.send('Hello World!'))
+      //app.use('/api/v0/', IndexRouter)
 
-app.listen(port, () => console.log(`Todo Backend Listening at http://localhost:${port}`))
+      //Alan added - For support Versionning Control
+      // eval('Routerindex =  IndexRouter' + this.version.substring(1,this.version.length) + ';');
+      console.log(this.version)
+      
+      let routerIndex : any;
+
+      if (this.version.substring(1,this.version.length) == "0") {
+            routerIndex = IndexRouter0;
+      }
+      else if(this.version.substring(1,this.version.length) == "1") {
+            routerIndex = IndexRouter1;
+      }
+       
+      app.use(`/api/${this['version']}/`, routerIndex);
+      //app.use(`/api/${this['version']}/`, this[`indexRouter${this['version'].substring(1,this['version'].length)}`];
+
+      //app.get('/', (req, res) => res.send('Hello World!'))
+
+      app.listen(port, () => console.log(`Todo Backend Listening at http://localhost:${port}`))
+  }
+}
+
+const server = new Server();
+server.startServer();

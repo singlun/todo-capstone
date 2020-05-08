@@ -9,7 +9,7 @@ const router: Router = Router();
 router.use('/todos', TodoRouter);
 
 router.get('/', async (req: Request, res: Response) => {    
-    res.send(`${config.todo_version}`);
+    res.send(`v1`);
 });
 
-export const IndexRouter: Router = router;
+export const IndexRouter1: Router = router;

@@ -56,6 +56,9 @@ export default class App extends Component<AppProps, AppState> {
   generateMenu() {
     return (
       <Menu>
+        <Menu.Item name="logo">
+          Todo App - Ver 0
+        </Menu.Item>        
         <Menu.Item name="home">
           <Link to="/">Home</Link>
         </Menu.Item>
