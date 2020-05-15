@@ -35,6 +35,7 @@ install:
     - export KUBECONFIG="todo-deployment/k8s/config/todo-app-kubeconfig"
     - cd todo-deployment/k8s/config
     - export KUBECONFIG=$PWD/todo-app-kubeconfig
+    - kubectl config view
     - kubectl delete ConfigMap env-config
     - kubectl apply -f env-configmap.yaml
     - kubectl patch deployment backend-todo -p '{"spec":{"template":{"spec":{"terminationGracePeriodSeconds":31}}}}'
