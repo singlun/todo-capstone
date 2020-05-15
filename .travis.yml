@@ -33,6 +33,8 @@ install:
     - docker login -u "programmingwebsite" -p "25a4f164-45a0-455d-945b-7fb8e3e6d1ef" docker.io
     - docker-compose -f todo-deployment/docker/docker-compose-build.yaml push
     - export KUBECONFIG="todo-deployment/k8s/config/todo-app-kubeconfig"
+    - cd todo-deployment/k8s/config
+    - export KUBECONFIG=$PWD/todo-app-kubeconfig
     - kubectl delete ConfigMap env-config
     - kubectl apply -f env-configmap.yaml
     - kubectl patch deployment backend-todo -p '{"spec":{"template":{"spec":{"terminationGracePeriodSeconds":31}}}}'
