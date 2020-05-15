@@ -4,17 +4,6 @@ services: docker
 
 env:
   - DOCKER_COMPOSE_VERSION=1.23.2
-  - USERS_TODO_TABLE=Users-Todo-dev
-  - USERID_INDEX=UserIdIndex
-  - TODOS_S3_BUCKET=kubernetes-sing-todos-dev
-  - THUMBNAILS_S3_BUCKET=kubernetes-todos-sing-thumbnail-dev
-  - SIGNED_URL_EXPIRATION="300"
-  - AWS_REGION=us-east-2
-  - AWS_PROFILE=default
-  - TODO_VERSION=v0
-  - URL=http://localhost:3000
-  - AWS_ACCESS_KEY_ID=AKIA3EMTN7DWTDWZIFMT
-  - AWS_SECRET_ACCESS_KEY=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
 
 before_install:
   - docker -v && docker-compose -v
@@ -29,6 +18,17 @@ before_install:
 
 
 install:
+    - export USERS_TODO_TABLE="Users-Todo-dev"
+    - export USERID_INDEX="UserIdIndex"
+    - export TODOS_S3_BUCKET="kubernetes-sing-todos-dev"
+    - export THUMBNAILS_S3_BUCKET="kubernetes-todos-sing-thumbnail-dev"
+    - export SIGNED_URL_EXPIRATION="300"
+    - export AWS_REGION="us-east-2"
+    - export AWS_PROFILE="default"
+    - export TODO_VERSION="v0"
+    - export URL="http://localhost:3000"
+    - export AWS_ACCESS_KEY_ID="AKIA3EMTN7DWTDWZIFMT"
+    - export AWS_SECRET_ACCESS_KEY="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"  
     - docker-compose -f todo-deployment/docker/docker-compose-build.yaml build --parallel 
     - docker login -u "programmingwebsite" -p "25a4f164-45a0-455d-945b-7fb8e3e6d1ef" docker.io
     - docker-compose -f todo-deployment/docker/docker-compose-build.yaml push
