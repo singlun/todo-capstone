@@ -1,5 +1,4 @@
 const AWS = require('aws-sdk');
-import { DocumentClient } from 'aws-sdk/clients/dynamodb'
 import { TodoItem } from '../controllers/v0/todo/models/TodoItem'
 import { createLogger } from '../utils/logger'
 import * as c from '../config/config';
@@ -9,7 +8,7 @@ import Jimp from 'jimp';
 import { rejects } from 'assert';
 
 //Configure AWS
-var credentials = new AWS.SharedIniFileCredentials({profile: config.aws_profile});
+var credentials = new AWS.SharedIniFileCredentials({profile: 'default'});
 AWS.config.credentials = credentials;
 AWS.config.update({
   region: config.aws_region

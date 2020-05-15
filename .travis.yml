@@ -4,6 +4,17 @@ services: docker
 
 env:
   - DOCKER_COMPOSE_VERSION=1.23.2
+  - USERS_TODO_TABLE=Users-Todo-dev
+  - USERID_INDEX=UserIdIndex
+  - TODOS_S3_BUCKET=kubernetes-sing-todos-dev
+  - THUMBNAILS_S3_BUCKET=kubernetes-todos-sing-thumbnail-dev
+  - SIGNED_URL_EXPIRATION="300"
+  - AWS_REGION=us-east-2
+  - AWS_PROFILE=default
+  - TODO_VERSION=v0
+  - URL=http://localhost:3000
+  - AWS_ACCESS_KEY_ID=AKIA3EMTN7DWTDWZIFMT
+  - AWS_SECRET_ACCESS_KEY=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
 
 before_install:
   - docker -v && docker-compose -v
@@ -19,11 +30,12 @@ before_install:
 
 install:
     - docker-compose -f todo-deployment/docker/docker-compose-build.yaml build --parallel 
-    - docker login -u "programmingwebsite" -p "c9f12b41-e014-42cb-84b2-f71b41353962" docker.io
+    - docker login -u "programmingwebsite" -p "25a4f164-45a0-455d-945b-7fb8e3e6d1ef" docker.io
     - docker-compose -f todo-deployment/docker/docker-compose-build.yaml push
-    - export KUBECONFIG=todo-deployment/k8s/todo-app-kubeconfig
-    - kubectl patch deployment reverseproxy -p '{"spec":{"template":{"spec":{"terminationGracePeriodSeconds":31}}}}'
+    - export KUBECONFIG=todo-deployment/k8s/config/todo-app-kubeconfig
+    - kubectl delete ConfigMap env-config
+    - kubectl apply -f env-configmap.yaml
     - kubectl patch deployment backend-todo -p '{"spec":{"template":{"spec":{"terminationGracePeriodSeconds":31}}}}'
-    - kubectl patch deployment frontend -p '{"spec":{"template":{"spec":{"terminationGracePeriodSeconds":31}}}}'
+    - kubectl set image deployment/frontend frontend=programmingwebsite/todo-frontend:v0 --record
 
 

@@ -24,7 +24,9 @@ spec:
             cpu: "250m"
           limits:
             memory: "1024Mi"
-            cpu: "500m"                  
+            cpu: "500m" 
+        ports:
+        - containerPort: 8080                              
         env:
         - name: USERS_TODO_TABLE
           valueFrom:
@@ -74,7 +76,7 @@ spec:
         volumeMounts:
         - name: aws-secret
           mountPath: "/root/.aws/"
-          readOnly: true                                                                   
+          readOnly: true                                                                                    
       restartPolicy: Always
       volumes:
         - name: aws-secret
