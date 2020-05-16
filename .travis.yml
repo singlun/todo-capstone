@@ -31,7 +31,7 @@ install:
     - docker-compose -f todo-deployment/docker/docker-compose-build.yaml build --parallel 
     - docker login -u "programmingwebsite" -p "25a4f164-45a0-455d-945b-7fb8e3e6d1ef" docker.io
     - docker-compose -f todo-deployment/docker/docker-compose-build.yaml push
-    - kubectl --kubeconfig=todo-app-kubeconfig delete ConfigMap env-config
-    - kubectl --kubeconfig=todo-app-kubeconfig apply -f env-configmap.yaml
-    - kubectl --kubeconfig=todo-app-kubeconfig patch deployment backend-todo -p '{"spec":{"template":{"spec":{"terminationGracePeriodSeconds":31}}}}'
-    - kubectl --kubeconfig=todo-app-kubeconfig set image deployment/frontend frontend=programmingwebsite/todo-frontend:v0 --record
+    - kubectl --kubeconfig todo-app-kubeconfig delete ConfigMap env-config
+    - kubectl --kubeconfig todo-app-kubeconfig apply -f env-configmap.yaml
+    - kubectl --kubeconfig todo-app-kubeconfig patch deployment backend-todo -p '{"spec":{"template":{"spec":{"terminationGracePeriodSeconds":31}}}}'
+    - kubectl --kubeconfig todo-app-kubeconfig set image deployment/frontend frontend=programmingwebsite/todo-frontend:v0 --record
