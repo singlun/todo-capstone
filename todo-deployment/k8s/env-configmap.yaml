@@ -8,7 +8,7 @@ data:
   SIGNED_URL_EXPIRATION: "300"
   AWS_REGION: us-east-2
   AWS_PROFILE: default
-  TODO_VERSION: v0
+  TODO_VERSION: v1
   URL: http://localhost:3000  
 metadata:
   name: env-config

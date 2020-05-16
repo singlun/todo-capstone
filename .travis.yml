@@ -12,7 +12,7 @@ env:
     - SIGNED_URL_EXPIRATION="300"
     - AWS_REGION="us-east-2"
     - AWS_PROFILE="default"
-    - TODO_VERSION="v0"
+    - TODO_VERSION="v1"
     - URL="http://localhost:3000"
 
 before_install:
@@ -35,4 +35,4 @@ install:
     - kubectl apply -f todo-deployment/k8s/env-configmap.yaml
     - kubectl delete deployment backend-todo
     - kubectl apply -f todo-deployment/k8s/backend-todo-deployment.yaml
-    - kubectl set image deployment/frontend frontend=programmingwebsite/todo-frontend:v0 --record
+    - kubectl set image deployment/frontend frontend=programmingwebsite/todo-frontend:v1 --record
