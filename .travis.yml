@@ -15,8 +15,6 @@ before_install:
   - chmod +x ./kubectl
   - sudo mv ./kubectl /usr/local/bin/kubectl
 
-
-
 install:
     - export USERS_TODO_TABLE="Users-Todo-dev"
     - export USERID_INDEX="UserIdIndex"
@@ -32,7 +30,6 @@ install:
     - docker-compose -f todo-deployment/docker/docker-compose-build.yaml build --parallel 
     - docker login -u "programmingwebsite" -p "25a4f164-45a0-455d-945b-7fb8e3e6d1ef" docker.io
     - docker-compose -f todo-deployment/docker/docker-compose-build.yaml push
-    - export KUBECONFIG="todo-deployment/k8s/config/todo-app-kubeconfig"
     - cd todo-deployment/k8s/config
     - export KUBECONFIG=$PWD/todo-app-kubeconfig
     - kubectl config view
@@ -40,5 +37,3 @@ install:
     - kubectl apply -f env-configmap.yaml
     - kubectl patch deployment backend-todo -p '{"spec":{"template":{"spec":{"terminationGracePeriodSeconds":31}}}}'
     - kubectl set image deployment/frontend frontend=programmingwebsite/todo-frontend:v0 --record
-
-
