@@ -14,8 +14,6 @@ env:
     - AWS_PROFILE="default"
     - TODO_VERSION="v0"
     - URL="http://localhost:3000"
-    - AWS_ACCESS_KEY_ID="AKIA3EMTN7DWTDWZIFMT"
-    - AWS_SECRET_ACCESS_KEY="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" 
 
 before_install:
   - docker -v && docker-compose -v
@@ -26,12 +24,15 @@ before_install:
   - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
   - chmod +x ./kubectl
   - sudo mv ./kubectl /usr/local/bin/kubectl
+  - mkdir ${HOME}/.kube
 
-install:    
+install:
+    
     - docker-compose -f todo-deployment/docker/docker-compose-build.yaml build --parallel 
     - docker login -u "programmingwebsite" -p "25a4f164-45a0-455d-945b-7fb8e3e6d1ef" docker.io
     - docker-compose -f todo-deployment/docker/docker-compose-build.yaml push
-    - kubectl --kubeconfig todo-app-kubeconfig delete ConfigMap env-config
-    - kubectl --kubeconfig todo-app-kubeconfig apply -f env-configmap.yaml
-    - kubectl --kubeconfig todo-app-kubeconfig patch deployment backend-todo -p '{"spec":{"template":{"spec":{"terminationGracePeriodSeconds":31}}}}'
-    - kubectl --kubeconfig todo-app-kubeconfig set image deployment/frontend frontend=programmingwebsite/todo-frontend:v0 --record
+    - kubectl delete ConfigMap env-config
+    - kubectl apply -f todo-deployment/k8s/env-configmap.yaml
+    - kubectl delete deployment backend-todo
+    - kubectl apply -f todo-deployment/k8s/backend-todo-deployment.yaml
+    - kubectl set image deployment/frontend frontend=programmingwebsite/todo-frontend:v0 --record
