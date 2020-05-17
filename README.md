@@ -158,29 +158,29 @@ For this project we will uses Oracle Vitualbox Virtual Machine for simulating th
             * By typing in the command `kubectl -f file-name apply`, `file-name` are the files in the k8s folder. 
                 For instance : `kubectl -f frontend-deployment.yaml apply`.
 
-            * Things need to remind `thanks to Dan B.`. 
+    * Things need to remind `thanks to Dan B.`. 
 
-                * Base64 credentials:
+        * Base64 credentials:
 
-                    - aws-secret.yaml
-                        * Find your credentials in ~/.aws/credentials.
-                        You need to save your key in base64 —> type in 'base64 credentials'  —> this output is what you save under “credentials” in your aws-secret.yaml file.
-                    - env-configmap.yaml
-                        * Make sure all these variables are correct. This is pretty self explanatory. You should know where to get these values if the are not   already saved in your bash profile.
+            - aws-secret.yaml
+                * Find your credentials in ~/.aws/credentials.
+                You need to save your key in base64 —> type in 'base64 credentials'  —> this output is what you save under “credentials” in your aws-secret.yaml file.
+            - env-configmap.yaml
+                * Make sure all these variables are correct. This is pretty self explanatory. You should know where to get these values if the are not   already saved in your bash profile.
 
-                * CONSISTENCY IS KEY!!!
+        * CONSISTENCY IS KEY!!!
 
-                    If your reserve proxy is not running: Execute: kubectl logs ${your pod name here}
+            If your reserve proxy is not running: Execute: kubectl logs ${your pod name here}
 
-                    To find your node value execute kubectl get nodes -o wide. Copy the NAME for all nodes that are MASTERS into the bash command above. This should fix your problem.
+            To find your node value execute kubectl get nodes -o wide. Copy the NAME for all nodes that are MASTERS into the bash command above. This should fix your problem.
 
-                    If you have any “CrashLoopBackOff” Errors then you have a variable issue. Make sure your env-configmap.yaml has the proper values. If need be: Kubectl delete secret env-config update your env-configmap.yaml Kubectl apply -f env-configmap.yaml
+            If you have any “CrashLoopBackOff” Errors then you have a variable issue. Make sure your env-configmap.yaml has the proper values. If need be: Kubectl delete secret env-config update your env-configmap.yaml Kubectl apply -f env-configmap.yaml
 
-                * Helpful commands:
+        * Helpful commands:
 
-                    Kubectl describe pod/svc/rs/deployment ${name of pod/service/replicaset/deployment} Kubectl log ${name of pod/service/replicatset/deployemnt}
+            Kubectl describe pod/svc/rs/deployment ${name of pod/service/replicaset/deployment} Kubectl log ${name of pod/service/replicatset/deployemnt}
 
-                    Its helpful to look at the logs if something is wrong. It’ll show you the code output in your containers should you need to debug.
+            Its helpful to look at the logs if something is wrong. It’ll show you the code output in your containers should you need to debug.
 
 
 ## References
