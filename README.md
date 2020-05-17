@@ -1,4 +1,4 @@
-# Todo App - An App develop as Continuous Deployment with Travis CI and Kubernetes on AWS using Terraform and Kubeone
+# Todo App - A todo App develop as Microservices Kubernetes and deployed on AWS using Terraform and Kubeone, and apply Continuous Integration Deployment with Travis CI. 
 
 ## Table of Contents
 
