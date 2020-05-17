@@ -9,7 +9,9 @@
 * [Setting Environment Variables Windows](#Setting-Environment-Variables-Windows)
 * [Setting Environment Variables Linux](#Setting-Environment-Variables-Linux)
 * [Installation Todo App - Docker](#Installation-Todo-Docker)
-* [Installation Todo App - Kubernetes](#Installation-Todo-Kubernetes)
+* [Part 1 - Create AWS Kubernetes Infrastructure](#Installation-Todo-Kubernetes-Infrastructure)
+* [Part 2 - Installation Todo Kubernetes On AWS](#Installation-Todo-Kubernetes)
+* [Part 3 - Continuous Integration and Deploy Using Travis CI](#Todo-Travis-CI)
 * [Project Reference Sources Or Links](#references)
 
 ## OverView
@@ -78,15 +80,15 @@ For this project we will uses Oracle Vitualbox Virtual Machine for simulating th
 ## Setting-Environment-Variables-Linux
     * For Linux:
       * Please type in the following in the Terminal.
-        - export USERS_TODO_TABLE="Users-Todo-dev"
-        - export USERID_INDEX="UserIdIndex"
-        - export TODOS_S3_BUCKET="kubernetes-andrew-todos-dev"
-        - export THUMBNAILS_S3_BUCKET="kubernetes-todos-andrew-thumbnail-dev"
-        - export SIGNED_URL_EXPIRATION="300"
-        - export AWS_REGION="us-east-2"
-        - export AWS_PROFILE="default"
-        - export TODO_VERSION="v0"
-        - export URL="http://localhost:3000"
+         export USERS_TODO_TABLE="Users-Todo-dev"
+         export USERID_INDEX="UserIdIndex"
+         export TODOS_S3_BUCKET="kubernetes-andrew-todos-dev"
+         export THUMBNAILS_S3_BUCKET="kubernetes-todos-andrew-thumbnail-dev"
+         export SIGNED_URL_EXPIRATION="300"
+         export AWS_REGION="us-east-2"
+         export AWS_PROFILE="default"
+         export TODO_VERSION="v0"
+         export URL="http://localhost:3000"
 
 
     
@@ -95,7 +97,7 @@ For this project we will uses Oracle Vitualbox Virtual Machine for simulating th
 * The only options to install Todo App is by cloning from the git hub please follow the instructions below .
 
     1. From the PowerShell Terminal, type in the command:
-        * git clone `https://github.com/andrewemadgabra/Capstone`. 
+        * git clone `https://github.com/singlun/todo-capstone.git`. 
     2. After cloning, browse to the `client` folder. From the client folder,  you need to install the packages and dependencies for the frontend. Type in the following command in the client folder.
         * npm install
     3. After cloning, browse to the `k8s-restapi-todo` folder. From the folder,  you need to install the packages and dependencies for the backend. Type in the following command in the folder.
@@ -109,54 +111,78 @@ For this project we will uses Oracle Vitualbox Virtual Machine for simulating th
     6. Run the project.
         * To run the Todo App. Type in `docker-compose up`.
 
-## Installation-Kubernetes 
+## Installation-Todo-Kubernetes-Infrastructure 
 
-* The whole setup kubernetes describe below some is referenced from my classmate 'Dan B'.
+* Please follow the whole setup procedure below to create the kubernetes Infrastructure on AWS .
 
-    * From the Linux Virtual Machine copy the whole folder `k8s`. (inside the `todo-deployment/k8s` folder) to the Linux virtual machine.
+    * From the Linux Machine :
 
-        1. export both your AWS_ACCESS_KEY_ID and export AWS_SECRET_ACCESS_KEY in your terminal. If you quit your bash session you’ll have to do this again. Execute echo $AWS_ACCESS_KEY_ID to make sure you’ve done this correctly.
+        1. Export both your AWS_ACCESS_KEY_ID and export AWS_SECRET_ACCESS_KEY in your terminal. If you quit your bash session you’ll have to do this again. Execute echo $AWS_ACCESS_KEY_ID to make sure you’ve done this correctly.
 
-        2. Download Terraform and kubeone per the resources above.        
+        2. Download Terraform and kubeone describe above.
 
-        3. Build the Infrastructure:
-           Follow this Link: `https://medium.com/@alexander_15213/running-ha-kubernetes-clusters-on-aws-using-kubeone-535b93af57ab`
+        3. After download Kubeone. Unzip it.
 
-        4. Deploy all the files in k8s folder by typing in the below command.
-           * kubectl -f file-name.yaml apply           
+        4. Browse to the folder `/examples/terraform/aws`.
 
-        5. If you encounter Errors please read below:
+        5. Copy the whole `aws` folder to the root directory.        
 
-            * POTENTIAL ERRORS: “Handshake”
+        6. Inside the `aws` folder, modify the variables.tf file. To make it simple, the only thing you need to modify is the `aws_region`. Please fill in the region of your AWS account.
 
-                This has to do with your public/private rsa id
+        7. Then inside the `aws` folder. Type in the command `terraform init`.
 
-                once you’ve executed terraform apply take a look at this: https://help.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+        8. Then type in the command `terraform apply`. This will create the AWS infrasturctue according to the requirements that specify in the `variables.rf` file. This process will takes around 5 to 10 minutes.
 
-                Specifically the section relating to “Adding your SSH key to the ssh-agent”. I found after my cluster was up but before I installed kubeone, I ran the agent and executing ssh-add I was able to execute kubeone install config.yaml -t tf.json and it worked.
+        7. Then now comes to Deploy your K8s high up in the clouds. But before you need to do some preparation.
 
-                Make sure you then execute: export KUBECONFIG=$PWD/${name of your cluster}-kubeconfig
+            * Please follow this link `https://help.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent` to generate the public and private `ssh-key` and add it to the `ssh-agent`.
 
-            * Deploying Everything: Things to solve ahead of time:
+        8. Again inside the `aws` folder type in the command `kubeone config print > config.yaml`. This will generate a config file that will be used to deploy the k8s to the aws cloud. Open the file and modify the name to `todo-app-cluster`.
 
-                - aws-secret.yaml
-                    * Find your credentials in ~/.aws/credentials.
-                    You need to save your key in base64 —> type in 'base64 credentials'  —> this output is what you save under “credentials” in your aws-secret.yaml file.
-                - env-configmap.yaml
-                    * Make sure all these variables are correct. This is pretty self explanatory. You should know where to get these values if the are not   already saved in your bash profile.
-            * CONSISTENCY IS KEY!!!
+        9. Type in the command `kubeone install config.yaml -t .` to deploy the k8s to the AWS.
 
-                If your reserve proxy is not running: Execute: kubectl logs ${your pod name here}
+        10. After the install, there will be a `todo-app-kubeconfig` file generated.
 
-                To find your node value execute kubectl get nodes -o wide. Copy the NAME for all nodes that are MASTERS into the bash command above. This should fix your problem.
+        11. Backup the `todo-app-kubeconfig` file, and rename it to `config` and copy it to `$HOME/.kube`.
 
-                If you have any “CrashLoopBackOff” Errors then you have a variable issue. Make sure your env-configmap.yaml has the proper values. If need be: Kubectl delete secret env-config update your env-configmap.yaml Kubectl apply -f env-configmap.yaml
 
-            * Helpful commands:
+## Installation-Todo-Kubernetes
 
-                Kubectl describe pod/svc/rs/deployment ${name of pod/service/replicaset/deployment} Kubectl log ${name of pod/service/replicatset/deployemnt}
+   * From the Linux Machine :
 
-                Its helpful to look at the logs if something is wrong. It’ll show you the code output in your containers should you need to debug.
+    1. From the shell Terminal, type in the command:
+       * git clone `https://github.com/singlun/todo-capstone.git`.   
+
+    2. Browse to the folder `todo-deployment/k8s`. 
+
+    3. Deploying Everything: 
+
+       * By typing in the command `kubectl -f file-name apply`, `file-name` are the files in the k8s folder. 
+         For instance : `kubectl -f frontend-deployment.yaml apply`.
+
+    * Things need to remind `thanks to Dan B.`. 
+
+        * Base64 credentials:
+
+            - aws-secret.yaml
+                * Find your credentials in ~/.aws/credentials.
+                You need to save your key in base64 —> type in 'base64 credentials'  —> this output is what you save under “credentials” in your aws-secret.yaml file.
+            - env-configmap.yaml
+                * Make sure all these variables are correct. This is pretty self explanatory. You should know where to get these values if the are not   already saved in your bash profile.
+
+        * CONSISTENCY IS KEY!!!
+
+            If your reserve proxy is not running: Execute: kubectl logs ${your pod name here}
+
+            To find your node value execute kubectl get nodes -o wide. Copy the NAME for all nodes that are MASTERS into the bash command above. This should fix your problem.
+
+            If you have any “CrashLoopBackOff” Errors then you have a variable issue. Make sure your env-configmap.yaml has the proper values. If need be: Kubectl delete secret env-config update your env-configmap.yaml Kubectl apply -f env-configmap.yaml
+
+        * Helpful commands:
+
+            Kubectl describe pod/svc/rs/deployment ${name of pod/service/replicaset/deployment} Kubectl log ${name of pod/service/replicatset/deployemnt}
+
+            Its helpful to look at the logs if something is wrong. It’ll show you the code output in your containers should you need to debug.
 
 
 ## References
