@@ -148,7 +148,7 @@ For Window you can use Oracle Vitualbox Virtual Machine for simulating the Linux
             * By typing in the command `kubectl -f file-name apply`, `file-name` are the files in the k8s folder. 
                 For instance : `kubectl -f frontend-deployment.yaml apply`.
 
-    * Things need to remind `thanks to Dan B.`. 
+    * Things need to remind `thanks to Dan B.`
 
         * Base64 credentials:
 
