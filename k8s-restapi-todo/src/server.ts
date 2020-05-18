@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import * as c from './config/config';
 import {IndexRouter0} from './controllers/v0/index.router';
 import {IndexRouter1} from './controllers/v1/index.router';
-
+import {IndexRouter2} from './controllers/v2/index.router';
 
 export class Server {
 
@@ -40,6 +40,9 @@ export class Server {
       else if(this.version.substring(1,this.version.length) == "1") {
             routerIndex = IndexRouter1;
       }
+      else if(this.version.substring(1,this.version.length) == "2") {
+        routerIndex = IndexRouter2;
+  }      
        
       app.use(`/api/${this['version']}/`, routerIndex);
       //app.use(`/api/${this['version']}/`, this[`indexRouter${this['version'].substring(1,this['version'].length)}`];

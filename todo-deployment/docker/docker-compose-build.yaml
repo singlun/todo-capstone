@@ -11,4 +11,4 @@ services:
   frontend:
     build:
       context: ../../client 
-    image: programmingwebsite/todo-frontend:v0
+    image: programmingwebsite/todo-frontend:v2

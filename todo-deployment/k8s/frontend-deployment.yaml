@@ -16,7 +16,7 @@ spec:
         api: external        
     spec:
       containers:
-      - image: programmingwebsite/todo-frontend:v0
+      - image: programmingwebsite/todo-frontend:v2
         name: frontend
         imagePullPolicy: Always          
         ports:

@@ -5,15 +5,19 @@ metadata:
     service: frontend
   name: frontend
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: programming.website.
-    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-east-2:765350246637:certificate/49813b86-d6d7-4c98-8259-d271326810fe
+    external-dns.alpha.kubernetes.io/hostname: www.programming.website,
+    external-dns.alpha.kubernetes.io/hostname: http://www.programming.website,
+    external-dns.alpha.kubernetes.io/hostname: http://programming.website,    
+    external-dns.alpha.kubernetes.io/hostname: https://www.programming.website,
+    external-dns.alpha.kubernetes.io/hostname: https://programming.website
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-east-1:765350246637:certificate/df4d0585-b551-442d-a592-85ca3839a641
     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
     service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"  
 spec:
   type: LoadBalancer  
   ports:
    - name: "3000"
-     port: 3000
+     port: 80
      targetPort: 3000
   selector:
     service: frontend

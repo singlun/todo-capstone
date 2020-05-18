@@ -180,7 +180,7 @@ For Window you can use Oracle Vitualbox Virtual Machine for simulating the Linux
     * The only setting for the Travis CI is the kubeconfig Evironment Variable, please follow the steps below:
         * Inorder for the Travis to access your cluster, the easiest way is to base64 encode your kubeconfig file and adding it as an environment variables under the settings for your repository             
             * To base64 encode your kubeconfig file you can use the following cmd:
-               `cat ${HOME}/.kube/config | base64`
+               `cat ${HOME}/.kube/config | base64 -w 0`
             * Then in the Travis Web page create a Environment Variable name `KUBE_CONFIG` and the paste the base64 code as the value.
 
 
