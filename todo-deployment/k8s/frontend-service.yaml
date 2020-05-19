@@ -12,12 +12,12 @@ metadata:
     external-dns.alpha.kubernetes.io/hostname: https://programming.website
     service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-east-1:765350246637:certificate/df4d0585-b551-442d-a592-85ca3839a641
     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
-    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"  
-spec:
-  type: LoadBalancer  
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"   
+spec: 
   ports:
    - name: "3000"
-     port: 80
+     port: 3000
      targetPort: 3000
   selector:
     service: frontend
+  type: LoadBalancer     
