@@ -11,3 +11,4 @@ spec:
    targetPort: 8888   
  selector:
   service: backend-todo
+ type: LoadBalancer 
