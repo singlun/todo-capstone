@@ -35,4 +35,5 @@ install:
     - kubectl apply -f todo-deployment/k8s/env-configmap.yaml
     - kubectl delete deployment backend-todo
     - kubectl apply -f todo-deployment/k8s/backend-todo-deployment.yaml
-    - kubectl set image deployment/frontend frontend=programmingwebsite/todo-frontend:v2 --record
+    - kubectl delete deployment frontend
+    - kubectl apply -f todo-deployment/k8s/frontend-deployment.yaml    
