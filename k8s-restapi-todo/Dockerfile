@@ -8,5 +8,5 @@ WORKDIR /usr/src/app
 #RUN npm ci 
 # Bundle app source
 COPY . .
-EXPOSE 8080
+EXPOSE 8888
 CMD [ "npm", "run", "dev" ]

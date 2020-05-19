@@ -3,7 +3,7 @@ services:
  reverseproxy:
   image: programmingwebsite/todo-reverseproxy
   ports:
-   - 8080:8080
+   - 8888:8888
   restart: always
   depends_on:
    - backend-todo
