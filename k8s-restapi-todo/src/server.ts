@@ -14,7 +14,7 @@ export class Server {
 
   startServer() {  
       const app = express();
-      const port = 8080;
+      const port = 8888;
 
       app.use(bodyParser.json());
 

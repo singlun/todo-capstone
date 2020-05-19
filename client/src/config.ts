@@ -4,7 +4,7 @@
 //user selects Version 1, PLEASE MODIFY THE v0 FLAG at the end of the API Endpoint.
 //For exapmle Version 1 Endpoint will be http://localhost:8080/api/v1
 
-export const apiEndpoint = `http://10.244.3.100:8080/api/v2`
+export const apiEndpoint = `http://localhost:8888/api/v2`
 
 //Alan Added For Testing on Oracle Virtual ToolBox
 //export const apiEndpoint = `http://192.168.99.103:8080/api/v0`
